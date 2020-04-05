@@ -2,7 +2,8 @@
   "name": "svoya-igra-ui",
   "version": "0.0.0",
   "scripts": {
-    "start": "node server"
+    "start": "node server",
+    "postinstall": "cd GUI && npm install"
   },
   "private": true,
   "dependencies": {

@@ -1,11 +1,11 @@
 {
-  "name": "svoya-igra-ui",
+  "name": "svoya-igra",
   "version": "0.0.0",
+  "private": true,
   "scripts": {
     "start": "node server",
     "postinstall": "cd GUI && npm install"
   },
-  "private": true,
   "dependencies": {
     "axios": "^0.19.2",
     "cheerio": "^1.0.0-rc.3",

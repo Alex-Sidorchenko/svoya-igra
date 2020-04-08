@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgxSmartModalService } from 'ngx-smart-modal';
 
 import { AppService } from '../../app.service';
 
@@ -14,7 +15,8 @@ export class SingleGameComponent implements OnInit {
   private answer: string;
 
   constructor(private appService: AppService,
-              private router: Router) {}
+              private router: Router,
+              private ngxSmartModalService: NgxSmartModalService) {}
 
   public ngOnInit(): void {
     if (!this.appService.questions) {
@@ -25,9 +27,19 @@ export class SingleGameComponent implements OnInit {
   }
 
   public submitAnswer() {
-    if (this.answerField.nativeElement.value === this.answer) {
-      alert('Правильно!');
+    if (this.answerField.nativeElement.value.toLowerCase() === this.answer.toLowerCase()) {
+      this.ngxSmartModalService.getModal('correct').open();
+      setTimeout(() => {
+        this.ngxSmartModalService.getModal('correct').close();
+      }, 1000);
+      this.selectRandomQuestion();
+    } else {
+      this.ngxSmartModalService.getModal('wrong').open();
+      setTimeout(() => {
+        this.ngxSmartModalService.getModal('wrong').close();
+      }, 1000);
     }
+    this.answerField.nativeElement.value = '';
   }
 
   private selectRandomQuestion(): void {

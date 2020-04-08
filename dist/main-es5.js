@@ -91,7 +91,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /* harmony default export */
 
 
-    __webpack_exports__["default"] = "<section class=\"page\">\r\n  <p>{{ question }}</p>\r\n  Ответ: <input type=\"text\" name=\"answer\" (change)=\"submitAnswer()\" #answerField>\r\n</section>\r\n";
+    __webpack_exports__["default"] = "<section class=\"page\">\r\n  <p>{{ question }}</p>\r\n  Ответ: <input type=\"text\" name=\"answer\" (change)=\"submitAnswer()\" #answerField>\r\n</section>\r\n\r\n<ngx-smart-modal #wrong identifier=\"wrong\" class=\"wrong\">\r\n  <h1>Incorrect</h1>\r\n</ngx-smart-modal>\r\n\r\n<ngx-smart-modal #correct identifier=\"correct\" class=\"correct\">\r\n  <h1>Correct</h1>\r\n</ngx-smart-modal>\r\n";
     /***/
   },
 
@@ -897,31 +897,37 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /* harmony import */
 
 
-    var _app_routing_module__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+    var ngx_smart_modal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+    /*! ngx-smart-modal */
+    "./node_modules/ngx-smart-modal/esm2015/ngx-smart-modal.js");
+    /* harmony import */
+
+
+    var _app_routing_module__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
     /*! ./app-routing.module */
     "./src/app/app-routing.module.ts");
     /* harmony import */
 
 
-    var _app_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+    var _app_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
     /*! ./app.component */
     "./src/app/app.component.ts");
     /* harmony import */
 
 
-    var _app_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+    var _app_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
     /*! ./app.service */
     "./src/app/app.service.ts");
     /* harmony import */
 
 
-    var _components_home_home_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
+    var _components_home_home_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(
     /*! ./components/home/home.component */
     "./src/app/components/home/home.component.ts");
     /* harmony import */
 
 
-    var _components_single_game_single_game_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(
+    var _components_single_game_single_game_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(
     /*! ./components/single-game/single-game.component */
     "./src/app/components/single-game/single-game.component.ts");
 
@@ -930,10 +936,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     };
 
     AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["NgModule"])({
-      declarations: [_app_component__WEBPACK_IMPORTED_MODULE_5__["AppComponent"], _components_home_home_component__WEBPACK_IMPORTED_MODULE_7__["HomeComponent"], _components_single_game_single_game_component__WEBPACK_IMPORTED_MODULE_8__["SingleGameComponent"]],
-      imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"], _app_routing_module__WEBPACK_IMPORTED_MODULE_4__["AppRoutingModule"], _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClientModule"]],
-      providers: [_app_service__WEBPACK_IMPORTED_MODULE_6__["AppService"]],
-      bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_5__["AppComponent"]]
+      declarations: [_app_component__WEBPACK_IMPORTED_MODULE_6__["AppComponent"], _components_home_home_component__WEBPACK_IMPORTED_MODULE_8__["HomeComponent"], _components_single_game_single_game_component__WEBPACK_IMPORTED_MODULE_9__["SingleGameComponent"]],
+      imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"], _app_routing_module__WEBPACK_IMPORTED_MODULE_5__["AppRoutingModule"], _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClientModule"], ngx_smart_modal__WEBPACK_IMPORTED_MODULE_4__["NgxSmartModalModule"].forRoot()],
+      providers: [_app_service__WEBPACK_IMPORTED_MODULE_7__["AppService"]],
+      bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_6__["AppComponent"]]
     })], AppModule);
     /***/
   },
@@ -1187,16 +1193,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /* harmony import */
 
 
-    var _app_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+    var ngx_smart_modal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+    /*! ngx-smart-modal */
+    "./node_modules/ngx-smart-modal/esm2015/ngx-smart-modal.js");
+    /* harmony import */
+
+
+    var _app_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
     /*! ../../app.service */
     "./src/app/app.service.ts");
 
     var SingleGameComponent = /*#__PURE__*/function () {
-      function SingleGameComponent(appService, router) {
+      function SingleGameComponent(appService, router, ngxSmartModalService) {
         _classCallCheck(this, SingleGameComponent);
 
         this.appService = appService;
         this.router = router;
+        this.ngxSmartModalService = ngxSmartModalService;
       }
 
       _createClass(SingleGameComponent, [{
@@ -1212,9 +1225,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "submitAnswer",
         value: function submitAnswer() {
-          if (this.answerField.nativeElement.value === this.answer) {
-            alert('Правильно!');
+          var _this2 = this;
+
+          if (this.answerField.nativeElement.value.toLowerCase() === this.answer.toLowerCase()) {
+            this.ngxSmartModalService.getModal('correct').open();
+            setTimeout(function () {
+              _this2.ngxSmartModalService.getModal('correct').close();
+            }, 1000);
+            this.selectRandomQuestion();
+          } else {
+            this.ngxSmartModalService.getModal('wrong').open();
+            setTimeout(function () {
+              _this2.ngxSmartModalService.getModal('wrong').close();
+            }, 1000);
           }
+
+          this.answerField.nativeElement.value = '';
         }
       }, {
         key: "selectRandomQuestion",
@@ -1230,9 +1256,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     SingleGameComponent.ctorParameters = function () {
       return [{
-        type: _app_service__WEBPACK_IMPORTED_MODULE_3__["AppService"]
+        type: _app_service__WEBPACK_IMPORTED_MODULE_4__["AppService"]
       }, {
         type: _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]
+      }, {
+        type: ngx_smart_modal__WEBPACK_IMPORTED_MODULE_3__["NgxSmartModalService"]
       }];
     };
 
